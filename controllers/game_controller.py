@@ -29,7 +29,7 @@ class GameController:
                     running = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        bullet = Bullet(self.player.rect.centerx, self.player.rect.top, 'up')
+                        bullet = Bullet(self.player.rect.centerx, self.player.rect.top, 'up', 'player')
                         self.bullets.add(bullet)
 
             self.player.update()

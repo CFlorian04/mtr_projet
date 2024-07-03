@@ -1,9 +1,9 @@
 import pygame
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction='up'):
+    def __init__(self, x, y, direction='up', type='player'):
         super().__init__()
-        self.image = pygame.image.load("assets/images/bullet.png")
+        self.image = pygame.image.load("assets/images/player_laser.png") if type == 'player' else pygame.image.load("assets/images/enemy_laser.png")
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.top = y if direction == 'up' else y - self.rect.height
