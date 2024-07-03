@@ -1,6 +1,7 @@
 import pygame
 import random
 
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -9,7 +10,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speed_x = random.choice([-2, 2])
-        self.speed_y = 10
+        self.speed_y = self.rect.height * 0.9
 
     def update(self):
         self.rect.x += self.speed_x
