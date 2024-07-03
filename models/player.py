@@ -3,7 +3,7 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("assets/images/player.png")
+        self.image = pygame.image.load("assets/images/player.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.centerx = 400
         self.rect.bottom = 580
@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.deceleration = 0.2
 
     def update(self):
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.speed_x -= self.acceleration
