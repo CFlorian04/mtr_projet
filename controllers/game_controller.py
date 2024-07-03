@@ -1,12 +1,15 @@
 import pygame
+from models.heart import Heart
 from models.player import Player
 from models.enemy import Enemy
 from models.bullet import Bullet
 from views.game_view import GameView
 
+
 class GameController:
     def __init__(self, screen: pygame.Surface):
         self.player = Player()
+        self.hearts = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.enemy_bullets = pygame.sprite.Group()
@@ -17,10 +20,17 @@ class GameController:
         self.create_hearts()
         self.create_enemies()
 
+    def create_hearts(self) -> None:
+        for i in reversed(range(3)):
+            heart = Heart()
+            heart.rect.x = self.view.screen.get_size()[0] - (Heart.base_size * (i+1) + 10)
+            heart.rect.y = 20
+            self.hearts.add(heart)
+
     def create_enemies(self):
-        for i in range(5):
+        for i in range(3):
             for j in range(8):
-                enemy = Enemy(100 + j * 60, 50 + i * 40)
+                enemy = Enemy(100 + j * 60, 50 + i * 50)
                 self.enemies.add(enemy)
 
     def run(self):
