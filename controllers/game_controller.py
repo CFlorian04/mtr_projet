@@ -5,13 +5,16 @@ from models.bullet import Bullet
 from views.game_view import GameView
 
 class GameController:
-    def __init__(self, screen):
+    def __init__(self, screen: pygame.Surface):
         self.player = Player()
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.enemy_bullets = pygame.sprite.Group()
         self.view = GameView(screen)
 
+        self.score = 0
+
+        self.create_hearts()
         self.create_enemies()
 
     def create_enemies(self):
@@ -39,14 +42,15 @@ class GameController:
 
             self.handle_collisions()
 
-            self.view.draw(self.player, self.enemies, self.bullets, self.enemy_bullets)
+            self.view.draw(self.player, self.enemies, self.bullets, self.enemy_bullets, self.hearts, self.score)
 
             clock.tick(60)
 
     def handle_collisions(self):
         # Vérification des collisions entre les projectiles du joueur et les ennemis
         collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True)
-        for bullet in collisions:
+        for bullet, enemy in collisions.items():
+            self.score += 100
             bullet.kill()
 
         # Vérification des collisions entre les ennemis et le joueur
