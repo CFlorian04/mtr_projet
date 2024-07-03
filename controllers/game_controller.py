@@ -58,10 +58,12 @@ class GameController:
 
     def handle_collisions(self):
         # Vérification des collisions entre les projectiles du joueur et les ennemis
-        collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True)
-        for bullet, enemy in collisions.items():
+        collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, False, False)
+        for bullet, enemies in collisions.items():
             self.score += 100
-            bullet.kill()
+            if bullet.alive():
+                bullet.kill()
+                next(iter(enemies)).kill()  # Sélection le premier ennemi parmi ceux trouvés, et le tue
 
         # Vérification des collisions entre les ennemis et le joueur
         if pygame.sprite.spritecollideany(self.player, self.enemies):
