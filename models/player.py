@@ -16,11 +16,11 @@ class Player(pygame.sprite.Sprite):
     def update(self):
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] | keys[pygame.K_q]:
             self.speed_x -= self.acceleration
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] | keys[pygame.K_d]:
             self.speed_x += self.acceleration
-        if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+        if not (keys[pygame.K_LEFT] | keys[pygame.K_q]) and not (keys[pygame.K_RIGHT] | keys[pygame.K_d]):
             if self.speed_x > 0:
                 self.speed_x -= self.deceleration
                 if self.speed_x < 0:
