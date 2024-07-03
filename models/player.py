@@ -1,16 +1,17 @@
 import pygame
+from settings.settings import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("assets/images/player.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.centerx = 400
-        self.rect.bottom = 580
+        self.rect.centerx = getGameWidth()/2
+        self.rect.bottom = int(getGameHeight() - getGameHeight()/30)
         self.speed_x = 0
-        self.acceleration = 0.2
-        self.max_speed = 5
-        self.deceleration = 0.2
+        self.max_speed = getGameWidth()/100
+        self.acceleration = self.max_speed/20
+        self.deceleration = self.acceleration
 
     def update(self):
 

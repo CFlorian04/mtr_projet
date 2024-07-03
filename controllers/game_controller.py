@@ -62,5 +62,5 @@ class GameController:
         # Vérification des collisions entre les projectiles ennemis et le joueur
         if pygame.sprite.spritecollideany(self.player, self.enemy_bullets):
             print("Player hit by enemy bullet!")
-            pygame.sprite.spritecollideany(self.player, self.enemy_bullets).kill()
+            #pygame.sprite.spritecollideany(self.player, self.enemy_bullets).kill()
 
