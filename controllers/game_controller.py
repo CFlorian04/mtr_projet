@@ -31,7 +31,7 @@ class GameController:
                 self.enemies.add(enemy)
 
     def reset_game(self):
-        self.player = Player()
+        self.player = Player(self.view)
         self.enemy_bullets.empty()
         self.score = 0
         self.create_enemies()
@@ -93,12 +93,11 @@ class GameController:
         # Vérification des collisions entre les ennemis et le joueur
         collisions = pygame.sprite.spritecollide(self.player, self.enemies, True)
         if collisions:
-            self.player.hit()
-            if not self.player.hitPoints:
-                self.player.kill()  # Todo: remove from screen
+            self.__playerHitEvent()
 
         # Vérification des collisions entre les projectiles ennemis et le joueur
         if pygame.sprite.spritecollideany(self.player, self.enemy_bullets):
+            self.__playerHitEvent()
             for bullet in pygame.sprite.spritecollide(self.player, self.enemy_bullets, False):
                 bullet.kill()
 
@@ -106,3 +105,8 @@ class GameController:
         if self.game_state == "playing" and not self.enemies:
             self.game_state = "victory"
 
+    def __playerHitEvent(self) -> None:
+        self.player.hit()
+        if not self.player.hitPoints:
+            self.player.kill()  # Todo: remove from screen
+            self.game_state = 'game_over'
