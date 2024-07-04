@@ -1,7 +1,11 @@
 import pygame
 
+from models.heart import Heart
+from views.game_view import GameView
+
+
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, view: GameView) -> None:
         super().__init__()
         self.image = pygame.image.load("assets/images/player.png")
         self.rect = self.image.get_rect()
@@ -12,7 +16,38 @@ class Player(pygame.sprite.Sprite):
         self.max_speed = 5
         self.deceleration = 0.2
 
-    def update(self):
+        self.__view = view
+
+        self.__hitPoints = 3
+        self.__hearts: dict[int, Heart] = {}
+        self.__heartsSpriteGroup = pygame.sprite.Group()
+        self.__create_hearts()
+
+    def __create_hearts(self) -> None:
+        for i in reversed(range(self.__hitPoints)):
+            heart = Heart()
+            heart.rect.x = self.__view.screen.get_size()[0] - (Heart.base_size * (i+1) + 10)
+            heart.rect.y = 20
+            self.__heartsSpriteGroup.add(heart)
+            self.__hearts[i + 1] = heart
+
+    def hit(self) -> None:
+        if self.__hitPoints:
+            self.__hearts[self.__hitPoints].full = False
+            self.__hitPoints -= 1
+
+    @property
+    def hitPoints(self) -> int:
+        return self.__hitPoints
+
+    @property
+    def hearts(self) -> pygame.sprite.Group:
+        return self.__heartsSpriteGroup
+
+    def update(self) -> None:
+        if not self.hitPoints:
+            return
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] | keys[pygame.K_q]:
             self.speed_x -= self.acceleration

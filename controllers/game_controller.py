@@ -8,24 +8,15 @@ from views.game_view import GameView
 
 class GameController:
     def __init__(self, screen: pygame.Surface):
-        self.player = Player()
-        self.hearts = pygame.sprite.Group()
+        self.view = GameView(screen)
+        self.player = Player(self.view)
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.enemy_bullets = pygame.sprite.Group()
-        self.view = GameView(screen)
 
         self.score = 0
 
-        self.create_hearts()
         self.create_enemies()
-
-    def create_hearts(self) -> None:
-        for i in reversed(range(3)):
-            heart = Heart()
-            heart.rect.x = self.view.screen.get_size()[0] - (Heart.base_size * (i+1) + 10)
-            heart.rect.y = 20
-            self.hearts.add(heart)
 
     def create_enemies(self):
         for i in range(3):
@@ -52,7 +43,7 @@ class GameController:
 
             self.handle_collisions()
 
-            self.view.draw(self.player, self.enemies, self.bullets, self.enemy_bullets, self.hearts, self.score)
+            self.view.draw(self.player, self.enemies, self.bullets, self.enemy_bullets, self.score)
 
             clock.tick(60)
 
@@ -66,8 +57,11 @@ class GameController:
                 next(iter(enemies)).kill()  # Sélection le premier ennemi parmi ceux trouvés, et le tue
 
         # Vérification des collisions entre les ennemis et le joueur
-        if pygame.sprite.spritecollideany(self.player, self.enemies):
-            print("Player hit by enemy!")
+        collisions = pygame.sprite.spritecollide(self.player, self.enemies, True)
+        if collisions:
+            self.player.hit()
+            if not self.player.hitPoints:
+                self.player.kill()  # Todo: remove from screen
 
         # Vérification des collisions entre les projectiles ennemis et le joueur
         if pygame.sprite.spritecollideany(self.player, self.enemy_bullets):
