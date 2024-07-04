@@ -1,10 +1,12 @@
 import pygame
+from settings.settings import *
 from controllers.game_controller import GameController
 
 
 def main():
+
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((getGameWidth(), getGameHeight()))
     pygame.display.set_caption("Space Invader")
 
     controller = GameController(screen)

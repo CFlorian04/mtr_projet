@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 from models.player import Player
 from models.enemy import Enemy
 from views.game_view import GameView
@@ -18,7 +18,7 @@ class GameController:
     def create_enemies(self):
         for i in range(3):
             for j in range(8):
-                enemy = Enemy(100 + j * 60, 50 + i * 50)
+                enemy = Enemy(100 + j * 60, 50 + i * 40, self.enemy_bullets)
                 self.enemies.add(enemy)
 
     def run(self):
@@ -28,6 +28,12 @@ class GameController:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+
+            for enemy in self.enemies:
+                if random.choice([0,20]) == 1:
+                    bullet = Bullet(self.player.rect.centerx, self.player.rect.top, 'up', 'player')
+                    self.bullets.add(bullet)
+
 
             self.player.update()
             self.player.bullets.update()
@@ -59,3 +65,5 @@ class GameController:
         # Vérification des collisions entre les projectiles ennemis et le joueur
         if pygame.sprite.spritecollideany(self.player, self.enemy_bullets):
             print("Player hit by enemy bullet!")
+            #pygame.sprite.spritecollideany(self.player, self.enemy_bullets).kill()
+
