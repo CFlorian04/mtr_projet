@@ -1,5 +1,6 @@
 import pygame
 
+
 class Heart(pygame.sprite.Sprite):
     base_size = 32
 
@@ -13,8 +14,7 @@ class Heart(pygame.sprite.Sprite):
 
     @property
     def image(self) -> pygame.image:
-        return pygame.transform.scale(self.__fullImg if self.__full else self.__emptyImg,
-                                      (self.base_size, self.base_size))
+        return pygame.transform.scale(self.__fullImg if self.__full else self.__emptyImg,(self.base_size, self.base_size))
 
     @property
     def full(self) -> bool:

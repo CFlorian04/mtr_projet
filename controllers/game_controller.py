@@ -1,10 +1,11 @@
-import pygame, random
+import pygame
+
+from models.bullet import Bullet
+from models.enemy import Enemy
 from models.heart import Heart
 from models.player import Player
-from models.enemy import Enemy
-from models.bullet import Bullet
-from views.game_view import GameView
 from settings.settings import *
+from views.game_view import GameView
 
 
 class GameController:
@@ -20,12 +21,12 @@ class GameController:
         self.score = 0
         self.game_state = "start"
 
-        self.create_hearts()
+        self.create_hearts(3)
         self.create_enemies()
 
-    def create_hearts(self) -> None:
+    def create_hearts(self, number) -> None:
         self.hearts.empty()
-        for i in reversed(range(3)):
+        for i in reversed(range(number)):
             heart = Heart()
             heart.rect.x = self.view.screen.get_size()[0] - (Heart.base_size * (i + 1) + 10)
             heart.rect.y = 20
@@ -43,7 +44,7 @@ class GameController:
         self.bullets.empty()
         self.enemy_bullets.empty()
         self.score = 0
-        self.create_hearts()
+        self.create_hearts(3)
         self.create_enemies()
 
     def run(self):
@@ -61,7 +62,7 @@ class GameController:
                     self.player.resize()
                     for heart in self.hearts:
                         heart.resize()
-                    self.create_hearts()  # Recreate hearts at new positions
+                    self.create_hearts(self.hearts.sprites().__len__())
                 elif event.type == pygame.KEYDOWN:
                     if self.game_state == "start" and event.key == pygame.K_RETURN:
                         self.game_state = "playing"
@@ -109,6 +110,7 @@ class GameController:
             for bullet in pygame.sprite.spritecollide(self.player, self.enemy_bullets, False):
                 bullet.kill()
 
+        # S'il n'y a plus d'ennemi, la partie est fini
         if self.game_state == "playing" and not self.enemies:
             self.game_state = "victory"
 

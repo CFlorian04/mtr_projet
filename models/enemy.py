@@ -1,7 +1,10 @@
-import pygame
 import random
+
+import pygame
+
 from models.bullet import Bullet
 from settings.settings import *
+
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet_group):
