@@ -16,6 +16,7 @@ class GameController:
         self.enemies = pygame.sprite.Group()
         self.enemy_bullets = pygame.sprite.Group()
 
+        self.highscore = self.view.getHighscore()
         self.score = 0
         self.game_state = "start"
         self.game_difficulty = self.score // 100
@@ -60,6 +61,7 @@ class GameController:
     def run(self):
         clock = pygame.time.Clock()
         running = True
+        score_register = False
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -114,6 +116,13 @@ class GameController:
                 self.view.draw_game_over_screen(self.score)
             elif self.game_state == "victory":
                 self.view.draw_victory_screen(self.score)
+
+            if not score_register and (self.game_state == "game_over" or self.game_state == "victory"):
+
+                if self.highscore < self.score:
+                    with open('highscore.txt', 'w') as f:
+                        f.write(str(self.score))
+                        self.highscore = self.score
 
             clock.tick(60)
 
