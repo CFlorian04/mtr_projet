@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.__create_hearts()
 
         self.__lastFired = pygame.time.get_ticks()  # Doc: msec
-        self.__fireRate = 1000 / 5  # Doc: 5 tirs max par seconde
+        self.__fireRate = 1000 / 3  # Doc: 3 tirs max par seconde
 
         # Doc: Initialise à fire rate + 1 pour qu'il puisse tirer dès le départ
         self.__cooldown = self.__fireRate + 1
@@ -113,3 +113,6 @@ class Player(pygame.sprite.Sprite):
         self.max_speed = getGameWidth() / 100
         self.acceleration = self.max_speed / 20
         self.deceleration = self.acceleration
+
+        for h in self.__hearts:
+            self.__hearts[h].resize()

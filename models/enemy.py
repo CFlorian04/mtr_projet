@@ -20,7 +20,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.speed_x = random.choice([-2, 2])
+        self.speed_x = 2
         self.speed_y = self.rect.height * 0.9
         self.bullet_group = bullet_group
 
@@ -30,3 +30,6 @@ class Enemy(pygame.sprite.Sprite):
             self.speed_x = -self.speed_x
             self.rect.y += self.speed_y
 
+    def inverseSpeed(self):
+        print(self.speed_x)
+        self.speed_x = -self.speed_x

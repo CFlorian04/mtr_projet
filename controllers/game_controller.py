@@ -18,6 +18,8 @@ class GameController:
 
         self.score = 0
         self.game_state = "start"
+        self.game_difficulty = self.score // 100
+        self.spawn_timer = 0  # Timer pour le réapparition des ennemis
 
         self.create_enemies()
 
@@ -26,15 +28,34 @@ class GameController:
     def create_enemies(self):
         self.enemies.empty()
         for i in range(3):
-            for j in range(8):
-                enemy = Enemy(25 + j * getGameWidth()/10, 50 + i * getGameHeight()/10, self.enemy_bullets)
+            for j in range(10):
+                enemy = Enemy(j * getGameWidth() / 10, i * getGameHeight() / 10, self.enemy_bullets)
                 self.enemies.add(enemy)
 
     def reset_game(self):
         self.player = Player(self.view)
         self.enemy_bullets.empty()
         self.score = 0
+        self.game_difficulty = 0
         self.create_enemies()
+
+    def spawn_random_enemy(self):
+        if len(self.enemies) >= 50:
+            return
+
+        enemy = None
+        max_attempts = 10  # Nombre maximal de tentatives pour trouver une position
+        for _ in range(max_attempts):
+            x = random.randint(0, getGameWidth() - Enemy(0, 0, pygame.sprite.Group()).rect.width)
+            y = random.randint(0, getGameHeight() // 10)
+            enemy = Enemy(x, y, self.enemy_bullets)
+
+            if not pygame.sprite.spritecollideany(enemy, self.enemies):
+                break
+            enemy = None
+
+        if enemy:
+            self.enemies.add(enemy)
 
     def run(self):
         clock = pygame.time.Clock()
@@ -59,8 +80,21 @@ class GameController:
 
             if self.game_state == "playing":
 
+                # Plus la difficulté augmente plus les ennemis ont de chance de spawner
+                self.spawn_timer += 1
+                timer = 120 - (0.5 * self.game_difficulty)
+                # Valeur minimum pour le timer
+                timer = timer if timer >= 20 else 20
+                # print(f"Respawn Time : {timer}")
+                if self.spawn_timer >= timer:
+                    self.spawn_random_enemy()
+                    self.spawn_timer = 0
+
+                # Plus la difficulté augmente plus les ennemis ont de chance de tirer
                 for enemy in self.enemies.sprites():
-                    if random.random() < 0.001:
+                    shot_luck = 0.001 + (self.game_difficulty / 100000)
+                    # print(f"Shot Luck : {shot_luck}")
+                    if random.random() < shot_luck:
                         # Un ennemi tire
                         bullet = Bullet(enemy.rect.centerx, enemy.rect.bottom, 'down', 'enemy')
                         self.enemy_bullets.add(bullet)
@@ -88,6 +122,7 @@ class GameController:
         collisions = pygame.sprite.groupcollide(self.player.bullets, self.enemies, True, False)
         for bullet, enemies in collisions.items():
             self.score += 100
+            self.game_difficulty = self.score // 100
             next(iter(enemies)).kill()
             play_enemy_explosion()
 
@@ -102,12 +137,26 @@ class GameController:
             for bullet in pygame.sprite.spritecollide(self.player, self.enemy_bullets, False):
                 bullet.kill()
 
-        # S'il n'y a plus d'ennemi, la partie est fini
-        if self.game_state == "playing" and not self.enemies:
-            self.game_state = "victory"
+        # Vérification des collisions entre ennemis
+        #self.handle_enemy_collisions()
+
+        # S'il n'y a plus d'ennemi, la partie est finie
+        #if self.game_state == "playing" and not self.enemies:
+        #    self.game_state = "victory"
+
+    # Todo: Ne fonctionne pas : À regarder
+    def handle_enemy_collisions(self):
+        for enemy1 in self.enemies:
+            for enemy2 in self.enemies:
+                if enemy1 != enemy2 and pygame.sprite.collide_rect(enemy1, enemy2):
+                    # Collision détectée entre deux ennemis
+                    enemy1.speed_x = -enemy1.speed_x
+                    enemy2.speed_x = -enemy2.speed_x
 
     def __playerHitEvent(self) -> None:
         self.player.hit()
         if not self.player.hitPoints:
-            self.player.kill()  # Todo: remove from screen
+            self.player.kill()
+            self.enemies.empty()
+            self.enemy_bullets.empty()
             self.game_state = 'game_over'
