@@ -1,6 +1,5 @@
 import pygame
 
-
 class Heart(pygame.sprite.Sprite):
     base_size = 32
 
@@ -26,3 +25,6 @@ class Heart(pygame.sprite.Sprite):
         if not isinstance(b, bool):
             raise TypeError(f"Expected bool got {type(b).__name__}")
         self.__full = b
+
+    def resize(self):
+        self.rect = self.image.get_rect()
