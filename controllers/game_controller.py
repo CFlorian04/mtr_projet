@@ -1,8 +1,6 @@
 import pygame
-from models.heart import Heart
 from models.player import Player
 from models.enemy import Enemy
-from models.bullet import Bullet
 from views.game_view import GameView
 
 
@@ -11,7 +9,6 @@ class GameController:
         self.view = GameView(screen)
         self.player = Player(self.view)
         self.enemies = pygame.sprite.Group()
-        self.bullets = pygame.sprite.Group()
         self.enemy_bullets = pygame.sprite.Group()
 
         self.score = 0
@@ -31,25 +28,21 @@ class GameController:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        bullet = Bullet(self.player.rect.centerx, self.player.rect.top, 'up', 'player')
-                        self.bullets.add(bullet)
 
             self.player.update()
+            self.player.bullets.update()
             self.enemies.update()
-            self.bullets.update()
             self.enemy_bullets.update()
 
             self.handle_collisions()
 
-            self.view.draw(self.player, self.enemies, self.bullets, self.enemy_bullets, self.score)
+            self.view.draw(self.player, self.enemies, self.enemy_bullets, self.score)
 
             clock.tick(60)
 
     def handle_collisions(self):
         # Vérification des collisions entre les projectiles du joueur et les ennemis
-        collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, False, False)
+        collisions = pygame.sprite.groupcollide(self.player.bullets , self.enemies, False, False)
         for bullet, enemies in collisions.items():
             self.score += 100
             if bullet.alive():

@@ -1,6 +1,7 @@
 import pygame
 
 from models.heart import Heart
+from models.bullet import Bullet
 from views.game_view import GameView
 
 
@@ -17,6 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.deceleration = 0.2
 
         self.__view = view
+
+        self.__bullets = pygame.sprite.Group()
 
         self.__hitPoints = 3
         self.__hearts: dict[int, Heart] = {}
@@ -41,6 +44,10 @@ class Player(pygame.sprite.Sprite):
         return self.__hitPoints
 
     @property
+    def bullets(self) -> pygame.sprite.Group:
+        return self.__bullets
+
+    @property
     def hearts(self) -> pygame.sprite.Group:
         return self.__heartsSpriteGroup
 
@@ -49,6 +56,10 @@ class Player(pygame.sprite.Sprite):
             return
 
         keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            bullet = Bullet(self.rect.centerx, self.rect.top, 'up', 'player')
+            self.__bullets.add(bullet)
+
         if keys[pygame.K_LEFT] | keys[pygame.K_q]:
             self.speed_x -= self.acceleration
         if keys[pygame.K_RIGHT] | keys[pygame.K_d]:
