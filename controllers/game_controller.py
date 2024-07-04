@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 
 from models.bullet import Bullet
 from models.enemy import Enemy
@@ -75,6 +75,11 @@ class GameController:
 
             if self.game_state == "playing":
 
+                for enemy in self.enemies.sprites():
+                    if random.random() < 0.001:
+                        bullet = Bullet(enemy.rect.centerx, enemy.rect.bottom, 'down', 'enemy')
+                        self.enemy_bullets.add(bullet)
+
                 self.player.update()
                 self.enemies.update()
                 self.bullets.update()
@@ -83,6 +88,7 @@ class GameController:
                 self.handle_collisions()
 
                 self.view.draw(self.player, self.enemies, self.bullets, self.enemy_bullets, self.hearts, self.score)
+
             elif self.game_state == "start":
                 self.view.draw_start_screen()
             elif self.game_state == "game_over":

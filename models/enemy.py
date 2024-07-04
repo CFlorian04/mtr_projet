@@ -30,9 +30,3 @@ class Enemy(pygame.sprite.Sprite):
             self.speed_x = -self.speed_x
             self.rect.y += self.speed_y
 
-        if random.random() < 0.001:
-            self.shoot()
-
-    def shoot(self):
-        bullet = Bullet(self.rect.centerx, self.rect.bottom, 'down', 'enemy')
-        self.bullet_group.add(bullet)
