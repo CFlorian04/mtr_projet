@@ -27,7 +27,7 @@ class GameController:
         self.enemies.empty()
         for i in range(3):
             for j in range(8):
-                enemy = Enemy(100 + j * 60, 50 + i * 40, self.enemy_bullets)
+                enemy = Enemy(25 + j * getGameWidth()/10, 50 + i * getGameHeight()/10, self.enemy_bullets)
                 self.enemies.add(enemy)
 
     def reset_game(self):

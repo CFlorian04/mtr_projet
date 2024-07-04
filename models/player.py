@@ -4,6 +4,7 @@ from settings.settings import *
 from models.heart import Heart
 from models.bullet import Bullet
 from views.game_view import GameView
+from sounds.sounds import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, view: GameView) -> None:
@@ -44,6 +45,8 @@ class Player(pygame.sprite.Sprite):
         if self.__hitPoints:
             self.__hearts[self.__hitPoints].full = False
             self.__hitPoints -= 1
+            play_player_explosion()
+
 
     @property
     def hitPoints(self) -> int:
@@ -74,6 +77,7 @@ class Player(pygame.sprite.Sprite):
             self.__cooldown = 0
             bullet = Bullet(self.rect.centerx, self.rect.top, 'up', 'player')
             self.__bullets.add(bullet)
+            play_player_laser()
 
         if keys[pygame.K_LEFT] | keys[pygame.K_q]:
             self.speed_x -= self.acceleration
