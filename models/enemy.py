@@ -1,6 +1,9 @@
-import pygame
 import random
+
+import pygame
+
 from models.bullet import Bullet
+from settings.settings import *
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -20,18 +23,10 @@ class Enemy(pygame.sprite.Sprite):
         self.speed_x = random.choice([-2, 2])
         self.speed_y = self.rect.height * 0.9
         self.bullet_group = bullet_group
-        self.speed_y = self.rect.height * 0.9
 
     def update(self):
         self.rect.x += self.speed_x
-        if self.rect.left < 0 or self.rect.right > 800:
+        if self.rect.left < 0 or self.rect.right > getGameWidth():
             self.speed_x = -self.speed_x
             self.rect.y += self.speed_y
-
-        if random.random() < 0.001:
-            self.shoot()
-
-    def shoot(self):
-        bullet = Bullet(self.rect.centerx, self.rect.bottom, 'down', 'enemy')
-        self.bullet_group.add(bullet)
 

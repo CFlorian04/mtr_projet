@@ -14,8 +14,7 @@ class Heart(pygame.sprite.Sprite):
 
     @property
     def image(self) -> pygame.image:
-        return pygame.transform.scale(self.__fullImg if self.__full else self.__emptyImg,
-                                      (self.base_size, self.base_size))
+        return pygame.transform.scale(self.__fullImg if self.__full else self.__emptyImg,(self.base_size, self.base_size))
 
     @property
     def full(self) -> bool:
@@ -26,3 +25,6 @@ class Heart(pygame.sprite.Sprite):
         if not isinstance(b, bool):
             raise TypeError(f"Expected bool got {type(b).__name__}")
         self.__full = b
+
+    def resize(self):
+        self.rect = self.image.get_rect()
