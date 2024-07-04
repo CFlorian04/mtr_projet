@@ -66,6 +66,8 @@ class Player(pygame.sprite.Sprite):
         tick = pygame.time.get_ticks()
         self.__cooldown = tick - self.__lastFired
 
+        self.bullets.update()
+
         # Doc: ne pourra pas tirer tant que le cooldown n'est pas passé
         if keys[pygame.K_SPACE] and self.__cooldown > self.__fireRate:
             self.__lastFired = tick

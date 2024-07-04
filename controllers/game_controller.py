@@ -2,7 +2,6 @@ import pygame, random
 
 from models.bullet import Bullet
 from models.enemy import Enemy
-from models.heart import Heart
 from models.player import Player
 from settings.settings import *
 from sounds.sounds import *
@@ -11,7 +10,7 @@ from views.game_view import GameView
 
 class GameController:
     def __init__(self, screen: pygame.Surface):
-
+        self.screen = screen
         self.view = GameView(screen)
         self.player = Player(self.view)
         self.enemies = pygame.sprite.Group()
@@ -24,7 +23,6 @@ class GameController:
 
         play_background_music()
 
-
     def create_enemies(self):
         self.enemies.empty()
         for i in range(3):
@@ -34,10 +32,8 @@ class GameController:
 
     def reset_game(self):
         self.player = Player()
-        self.bullets.empty()
         self.enemy_bullets.empty()
         self.score = 0
-        self.create_hearts(3)
         self.create_enemies()
 
     def run(self):
@@ -53,20 +49,13 @@ class GameController:
                     self.screen = pygame.display.set_mode((getGameWidth(), getGameHeight()), pygame.RESIZABLE)
                     self.view.screen = self.screen
                     self.player.resize()
-                    for heart in self.hearts:
-                        heart.resize()
-                    self.create_hearts(self.hearts.sprites().__len__())
                 elif event.type == pygame.KEYDOWN:
                     if self.game_state == "start" and event.key == pygame.K_RETURN:
                         self.game_state = "playing"
-                    elif (self.game_state == "game_over" or self.game_state == "victory") and event.key == pygame.K_RETURN:
+                    elif (
+                            self.game_state == "game_over" or self.game_state == "victory") and event.key == pygame.K_RETURN:
                         self.reset_game()
                         self.game_state = "playing"
-                    elif self.game_state == "playing" and event.key == pygame.K_SPACE:
-                        # Le joueur tire
-                        bullet = Bullet(self.player.rect.centerx, self.player.rect.top, 'up', 'player')
-                        self.bullets.add(bullet)
-                        play_player_laser()
 
             if self.game_state == "playing":
 
@@ -79,12 +68,11 @@ class GameController:
 
                 self.player.update()
                 self.enemies.update()
-                self.bullets.update()
                 self.enemy_bullets.update()
 
                 self.handle_collisions()
 
-                self.view.draw(self.player, self.enemies, self.bullets, self.enemy_bullets, self.hearts, self.score)
+                self.view.draw(self.player, self.enemies, self.enemy_bullets, self.score)
 
             elif self.game_state == "start":
                 self.view.draw_start_screen()
@@ -92,13 +80,12 @@ class GameController:
                 self.view.draw_game_over_screen(self.score)
             elif self.game_state == "victory":
                 self.view.draw_victory_screen(self.score)
-                
-            self.view.draw(self.player, self.enemies, self.enemy_bullets, self.score)
+
             clock.tick(60)
 
     def handle_collisions(self):
         # Vérification des collisions entre les projectiles du joueur et les ennemis
-        collisions = pygame.sprite.groupcollide(self.player.bullets , self.enemies, False, False)
+        collisions = pygame.sprite.groupcollide(self.player.bullets, self.enemies, False, False)
         for bullet, enemies in collisions.items():
             self.score += 100
             play_enemy_explosion()
@@ -112,7 +99,6 @@ class GameController:
 
         # Vérification des collisions entre les projectiles ennemis et le joueur
         if pygame.sprite.spritecollideany(self.player, self.enemy_bullets):
-            self.lose_heart()
             for bullet in pygame.sprite.spritecollide(self.player, self.enemy_bullets, False):
                 bullet.kill()
 
@@ -120,10 +106,3 @@ class GameController:
         if self.game_state == "playing" and not self.enemies:
             self.game_state = "victory"
 
-    def lose_heart(self):
-        if self.hearts:
-            heart = self.hearts.sprites()[-1]
-            heart.kill()
-            play_player_explosion()
-        if not self.hearts:
-            self.game_state = "game_over"
