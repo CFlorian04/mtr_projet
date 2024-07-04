@@ -6,6 +6,7 @@ from settings.settings import *
 
 def main():
     pygame.init()
+    pygame.mixer.init()
     # Création de la fenetre en RESIZEABLE
     screen = pygame.display.set_mode((getGameWidth(), getGameHeight()), pygame.RESIZABLE)
     pygame.display.set_caption("Space Invader")

@@ -5,6 +5,7 @@ from models.enemy import Enemy
 from models.heart import Heart
 from models.player import Player
 from settings.settings import *
+from sounds.sounds import *
 from views.game_view import GameView
 
 
@@ -23,6 +24,8 @@ class GameController:
 
         self.create_hearts(3)
         self.create_enemies()
+
+        play_background_music()
 
     def create_hearts(self, number) -> None:
         self.hearts.empty()
@@ -70,15 +73,19 @@ class GameController:
                         self.reset_game()
                         self.game_state = "playing"
                     elif self.game_state == "playing" and event.key == pygame.K_SPACE:
+                        # Le joueur tire
                         bullet = Bullet(self.player.rect.centerx, self.player.rect.top, 'up', 'player')
                         self.bullets.add(bullet)
+                        play_player_laser()
 
             if self.game_state == "playing":
 
                 for enemy in self.enemies.sprites():
                     if random.random() < 0.001:
+                        # Un ennemi tire
                         bullet = Bullet(enemy.rect.centerx, enemy.rect.bottom, 'down', 'enemy')
                         self.enemy_bullets.add(bullet)
+                        play_enemy_laser()
 
                 self.player.update()
                 self.enemies.update()
@@ -103,6 +110,7 @@ class GameController:
         collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True)
         for bullet, enemies in collisions.items():
             self.score += 100
+            play_enemy_explosion()
 
         # Vérification des collisions entre les ennemis et le joueur
         if pygame.sprite.spritecollideany(self.player, self.enemies):
@@ -124,5 +132,6 @@ class GameController:
         if self.hearts:
             heart = self.hearts.sprites()[-1]
             heart.kill()
+            play_player_explosion()
         if not self.hearts:
             self.game_state = "game_over"
