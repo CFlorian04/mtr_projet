@@ -20,19 +20,18 @@ class GameView:
         scaled_background = pygame.transform.scale(background, self.screen.get_size())
         self.screen.blit(scaled_background, (0, 0))
 
-    def draw(self, player, enemies, bullets, enemy_bullets, hearts, score: int) -> None:
-        # Ajout du player, ennemies, coeurs, bullets et du score
+    def draw(self, player, enemies, enemy_bullets, score: int) -> None:
         self.draw_background(self.game_background)
         self.screen.blit(player.image, player.rect)
         score_text = self.font.render(f"Score: {score}", 1, (255, 255, 255))
         self.screen.blit(score_text, (10, 30))
         for enemy in enemies:
             self.screen.blit(enemy.image, enemy.rect)
-        for bullet in bullets:
+        for bullet in player.bullets:
             self.screen.blit(bullet.image, bullet.rect)
         for bullet in enemy_bullets:
             self.screen.blit(bullet.image, bullet.rect)
-        for heart in hearts:
+        for heart in player.hearts:
             self.screen.blit(heart.image, heart.rect)
         pygame.display.flip()
 
