@@ -85,9 +85,10 @@ class GameController:
 
     def handle_collisions(self):
         # Vérification des collisions entre les projectiles du joueur et les ennemis
-        collisions = pygame.sprite.groupcollide(self.player.bullets, self.enemies, False, False)
+        collisions = pygame.sprite.groupcollide(self.player.bullets, self.enemies, True, False)
         for bullet, enemies in collisions.items():
             self.score += 100
+            next(iter(enemies)).kill()
             play_enemy_explosion()
 
         # Vérification des collisions entre les ennemis et le joueur
