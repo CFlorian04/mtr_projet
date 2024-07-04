@@ -40,8 +40,10 @@ class GameView:
         self.draw_background(self.menu_background)
         title_text = self.large_font.render("Space Invader", True, (255, 255, 255))
         start_text = self.font.render("Press ENTER to Start", True, (255, 255, 255))
-        self.screen.blit(title_text,(self.screen.get_width() // 2 - title_text.get_width() // 2, self.screen.get_height() // 3))
-        self.screen.blit(start_text,(self.screen.get_width() // 2 - start_text.get_width() // 2, self.screen.get_height() // 2))
+        self.screen.blit(title_text,
+                         (self.screen.get_width() // 2 - title_text.get_width() // 2, self.screen.get_height() // 3))
+        self.screen.blit(start_text,
+                         (self.screen.get_width() // 2 - start_text.get_width() // 2, self.screen.get_height() // 2))
         pygame.display.flip()
 
     def draw_game_over_screen(self, score: int) -> None:
@@ -50,9 +52,12 @@ class GameView:
         game_over_text = self.large_font.render("Game Over", True, (255, 0, 0))
         score_text = self.font.render(f"Score: {score}", True, (255, 255, 255))
         restart_text = self.font.render("Press ENTER to Restart", True, (255, 255, 255))
-        self.screen.blit(game_over_text, (self.screen.get_width() // 2 - game_over_text.get_width() // 2, self.screen.get_height() // 3))
-        self.screen.blit(score_text,(self.screen.get_width() // 2 - score_text.get_width() // 2, self.screen.get_height() // 2))
-        self.screen.blit(restart_text, (self.screen.get_width() // 2 - restart_text.get_width() // 2, self.screen.get_height() * 2 // 3))
+        self.screen.blit(game_over_text, (
+        self.screen.get_width() // 2 - game_over_text.get_width() // 2, self.screen.get_height() // 3))
+        self.screen.blit(score_text,
+                         (self.screen.get_width() // 2 - score_text.get_width() // 2, self.screen.get_height() // 2))
+        self.screen.blit(restart_text, (
+        self.screen.get_width() // 2 - restart_text.get_width() // 2, self.screen.get_height() * 2 // 3))
         pygame.display.flip()
 
     def draw_victory_screen(self, score: int) -> None:
@@ -61,7 +66,10 @@ class GameView:
         game_over_text = self.large_font.render("Victory", True, (0, 255, 0))
         score_text = self.font.render(f"Score: {score}", True, (255, 255, 255))
         restart_text = self.font.render("Press ENTER to Restart", True, (255, 255, 255))
-        self.screen.blit(game_over_text, (self.screen.get_width() // 2 - game_over_text.get_width() // 2, self.screen.get_height() // 3))
-        self.screen.blit(score_text,(self.screen.get_width() // 2 - score_text.get_width() // 2, self.screen.get_height() // 2))
-        self.screen.blit(restart_text, (self.screen.get_width() // 2 - restart_text.get_width() // 2, self.screen.get_height() * 2 // 3))
+        self.screen.blit(game_over_text, (
+        self.screen.get_width() // 2 - game_over_text.get_width() // 2, self.screen.get_height() // 3))
+        self.screen.blit(score_text,
+                         (self.screen.get_width() // 2 - score_text.get_width() // 2, self.screen.get_height() // 2))
+        self.screen.blit(restart_text, (
+        self.screen.get_width() // 2 - restart_text.get_width() // 2, self.screen.get_height() * 2 // 3))
         pygame.display.flip()

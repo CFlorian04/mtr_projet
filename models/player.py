@@ -1,10 +1,9 @@
-import pygame
-
-from settings.settings import *
-from models.heart import Heart
 from models.bullet import Bullet
-from views.game_view import GameView
+from models.heart import Heart
+from settings.settings import *
 from sounds.sounds import *
+from views.game_view import GameView
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, view: GameView) -> None:
@@ -17,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.max_speed = getGameWidth() / 100
         self.acceleration = self.max_speed / 20
         self.deceleration = self.acceleration
-        
+
         self.__view = view
 
         self.__bullets = pygame.sprite.Group()
@@ -36,7 +35,7 @@ class Player(pygame.sprite.Sprite):
     def __create_hearts(self) -> None:
         for i in reversed(range(self.__hitPoints)):
             heart = Heart()
-            heart.rect.x = self.__view.screen.get_size()[0] - (Heart.base_size * (i+1) + 10)
+            heart.rect.x = self.__view.screen.get_size()[0] - (Heart.base_size * (i + 1) + 10)
             heart.rect.y = 20
             self.__heartsSpriteGroup.add(heart)
             self.__hearts[i + 1] = heart
@@ -46,7 +45,6 @@ class Player(pygame.sprite.Sprite):
             self.__hearts[self.__hitPoints].full = False
             self.__hitPoints -= 1
             play_player_explosion()
-
 
     @property
     def hitPoints(self) -> int:
@@ -63,7 +61,7 @@ class Player(pygame.sprite.Sprite):
     def update(self) -> None:
         if not self.hitPoints:
             return
-         
+
         keys = pygame.key.get_pressed()
 
         tick = pygame.time.get_ticks()

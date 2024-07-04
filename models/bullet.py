@@ -1,4 +1,5 @@
 import pygame
+
 from settings.settings import *
 
 
@@ -12,7 +13,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.centerx = x
         self.rect.top = y if direction == 'up' else y - self.rect.height
 
-        self.bullet_speed = getGameHeight()/150
+        self.bullet_speed = getGameHeight() / 150
 
         self.speed_y = -self.bullet_speed if direction == 'up' else self.bullet_speed
 

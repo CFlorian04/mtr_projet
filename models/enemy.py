@@ -2,7 +2,6 @@ import random
 
 import pygame
 
-from models.bullet import Bullet
 from settings.settings import *
 
 

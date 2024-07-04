@@ -1,4 +1,4 @@
-import pygame, random
+import random
 
 from models.bullet import Bullet
 from models.enemy import Enemy
@@ -138,10 +138,10 @@ class GameController:
                 bullet.kill()
 
         # Vérification des collisions entre ennemis
-        #self.handle_enemy_collisions()
+        # self.handle_enemy_collisions()
 
         # S'il n'y a plus d'ennemi, la partie est finie
-        #if self.game_state == "playing" and not self.enemies:
+        # if self.game_state == "playing" and not self.enemies:
         #    self.game_state = "victory"
 
     # Todo: Ne fonctionne pas : À regarder
