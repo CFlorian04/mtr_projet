@@ -26,6 +26,12 @@ class Player(pygame.sprite.Sprite):
         self.__heartsSpriteGroup = pygame.sprite.Group()
         self.__create_hearts()
 
+        self.__lastFired = pygame.time.get_ticks()  # Doc: msec
+        self.__fireRate = 1000 / 5  # Doc: 5 tirs max par seconde
+
+        # Doc: Initialise à fire rate + 1 pour qu'il puisse tirer dès le départ
+        self.__cooldown = self.__fireRate + 1
+
     def __create_hearts(self) -> None:
         for i in reversed(range(self.__hitPoints)):
             heart = Heart()
@@ -56,7 +62,14 @@ class Player(pygame.sprite.Sprite):
             return
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
+
+        tick = pygame.time.get_ticks()
+        self.__cooldown = tick - self.__lastFired
+
+        # Doc: ne pourra pas tirer tant que le cooldown n'est pas passé
+        if keys[pygame.K_SPACE] and self.__cooldown > self.__fireRate:
+            self.__lastFired = tick
+            self.__cooldown = 0
             bullet = Bullet(self.rect.centerx, self.rect.top, 'up', 'player')
             self.__bullets.add(bullet)
 
