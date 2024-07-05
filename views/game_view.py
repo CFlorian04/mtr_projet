@@ -41,7 +41,7 @@ class GameView:
     def draw_start_screen(self) -> None:
         # Écran menu du jeu
         self.draw_background(self.menu_background)
-        title_text = self.large_font.render("Space Invader", True, (255, 255, 255))
+        title_text = self.large_font.render("Space Invaders", True, (255, 255, 255))
         start_text = self.font.render("Press ENTER to Start", True, (255, 255, 255))
         highscore_text = self.font.render(f"Highscore: {self.getHighscore()}", True, (255, 255, 255))
         self.screen.blit(title_text,(self.screen.get_width() // 2 - title_text.get_width() // 2, self.screen.get_height() // 3))
