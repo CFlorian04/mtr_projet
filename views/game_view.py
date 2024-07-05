@@ -1,4 +1,5 @@
 import pygame
+from sounds.sounds import play_intro_music
 
 
 class GameView:
@@ -7,6 +8,7 @@ class GameView:
         self.update_fonts()
         self.menu_background = pygame.image.load("assets/images/background_menu.jpg").convert()
         self.game_background = pygame.image.load("assets/images/background_game.jpg").convert()
+        play_intro_music()
 
     def update_fonts(self):
         screen_width, screen_height = self.screen.get_size()

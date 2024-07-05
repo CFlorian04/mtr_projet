@@ -1,5 +1,7 @@
 import random
 
+import pygame.mixer
+
 from models.bullet import Bullet
 from models.enemyRed import EnemyRed
 from models.enemyGreen import EnemyGreen
@@ -28,8 +30,6 @@ class GameController:
 
         self.create_enemies()
 
-        play_background_music()
-
     def create_enemies(self):
         self.enemies.empty()
         for i in range(3):
@@ -43,6 +43,7 @@ class GameController:
         self.score = 0
         self.game_difficulty = 0
         self.create_enemies()
+        pygame.mixer.music.stop()
 
     def spawn_random_enemy(self):
         if len(self.enemies) >= 50:
@@ -80,12 +81,15 @@ class GameController:
                 elif event.type == pygame.KEYDOWN:
                     if self.game_state == "start" and event.key == pygame.K_RETURN:
                         self.game_state = "playing"
+                        pygame.mixer.music.stop()
                     elif (
                             self.game_state == "game_over" or self.game_state == "victory") and event.key == pygame.K_RETURN:
                         self.reset_game()
                         self.game_state = "playing"
 
             if self.game_state == "playing":
+                if not pygame.mixer.music.get_busy():
+                    play_background_music()
 
                 # Plus la difficulté augmente plus les ennemis ont de chance de spawner
                 self.spawn_timer += 1
@@ -175,3 +179,4 @@ class GameController:
             self.enemies.empty()
             self.enemy_bullets.empty()
             self.game_state = 'game_over'
+            play_intro_music()
