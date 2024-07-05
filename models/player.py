@@ -33,6 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.__cooldown = self.__fireRate + 1
 
     def __create_hearts(self) -> None:
+        self.__heartsSpriteGroup.empty()
         for i in reversed(range(self.__hitPoints)):
             heart = Heart()
             heart.rect.x = self.__view.screen.get_size()[0] - (Heart.base_size * (i + 1) + 10)
@@ -66,7 +67,7 @@ class Player(pygame.sprite.Sprite):
 
         tick = pygame.time.get_ticks()
         self.__cooldown = tick - self.__lastFired
-
+        self.__create_hearts()
         self.bullets.update()
 
         # Doc: ne pourra pas tirer tant que le cooldown n'est pas passé

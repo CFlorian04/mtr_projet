@@ -10,7 +10,8 @@ def play_intro_music() -> None:
 
 def play_background_music():
     pygame.mixer.music.stop()
-    pygame.mixer.music.load(os.path.join('assets/sounds/game.wav'))
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load(os.path.join('assets/sounds/gameplay.wav'))
     pygame.mixer.music.play(-1)
 
 
