@@ -1,7 +1,9 @@
 import random
 
 from models.bullet import Bullet
-from models.enemy import Enemy
+from models.enemyRed import EnemyRed
+from models.enemyGreen import EnemyGreen
+from models.enemyBlue import EnemyBlue
 from models.player import Player
 from settings.settings import *
 from sounds.sounds import *
@@ -22,6 +24,8 @@ class GameController:
         self.game_difficulty = self.score // 100
         self.spawn_timer = 0  # Timer pour le réapparition des ennemis
 
+        self.__availableEnemies = [EnemyRed, EnemyGreen, EnemyBlue]
+
         self.create_enemies()
 
         play_background_music()
@@ -30,7 +34,7 @@ class GameController:
         self.enemies.empty()
         for i in range(3):
             for j in range(10):
-                enemy = Enemy(j * getGameWidth() / 10, i * getGameHeight() / 10, self.enemy_bullets)
+                enemy = random.choice(self.__availableEnemies)(j * getGameWidth() / 10, i * getGameHeight() / 10, self.enemy_bullets)
                 self.enemies.add(enemy)
 
     def reset_game(self):
@@ -47,9 +51,10 @@ class GameController:
         enemy = None
         max_attempts = 10  # Nombre maximal de tentatives pour trouver une position
         for _ in range(max_attempts):
-            x = random.randint(0, getGameWidth() - Enemy(0, 0, pygame.sprite.Group()).rect.width)
+            enemy_type = random.choice(self.__availableEnemies)
+            x = random.randint(0, getGameWidth() - enemy_type(0, 0, pygame.sprite.Group()).rect.width)
             y = random.randint(0, getGameHeight() // 10)
-            enemy = Enemy(x, y, self.enemy_bullets)
+            enemy = enemy_type(x, y, self.enemy_bullets)
 
             if not pygame.sprite.spritecollideany(enemy, self.enemies):
                 break
@@ -130,9 +135,10 @@ class GameController:
         # Vérification des collisions entre les projectiles du joueur et les ennemis
         collisions = pygame.sprite.groupcollide(self.player.bullets, self.enemies, True, False)
         for bullet, enemies in collisions.items():
-            self.score += 100
+            enemy = next(iter(enemies))
+            enemy.kill()
+            self.score += enemy.score
             self.game_difficulty = self.score // 100
-            next(iter(enemies)).kill()
             play_enemy_explosion()
 
         # Vérification des collisions entre les ennemis et le joueur

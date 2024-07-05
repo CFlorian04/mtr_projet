@@ -5,17 +5,13 @@ import pygame
 from settings.settings import *
 
 
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, bullet_group):
+class BaseEnemy(pygame.sprite.Sprite):
+    def __init__(self, x, y, bullet_group: pygame.sprite.Group, image: pygame.Surface):
         super().__init__()
 
-        self.enemy_images = [
-            pygame.image.load("assets/images/enemy1.png").convert_alpha(),
-            pygame.image.load("assets/images/enemy2.png").convert_alpha(),
-            pygame.image.load("assets/images/enemy3.png").convert_alpha()
-        ]
+        self.score = 100
 
-        self.image = random.choice(self.enemy_images)
+        self.image = image
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -30,5 +26,5 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.y += self.speed_y
 
     def inverseSpeed(self):
-        print(self.speed_x)
+        # print(self.speed_x)
         self.speed_x = -self.speed_x
